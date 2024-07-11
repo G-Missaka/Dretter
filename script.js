@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Please enter a valid integer for the seed.');
             return;
         };
-        alert('pikachu');
         randomLetters = generateRandomLetters(seedValue);
         prepareGroups();
         showNextGroup();
@@ -66,7 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function generateRandomLetters(seed = null) {
-        document.getElementById('result').innerText = `hi`;
         const letters = [...alphabet];
         if (seed) {
             Math.seedrandom(seed);
@@ -75,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const randomLetters = [];
         while (randomLetters.length < 2) {
+            document.getElementById('result').innerText = randomLetters.length;
             const randomIndex = Math.floor(Math.random() * letters.length);
             const letter = letters.splice(randomIndex, 1)[0];
             randomLetters.push(letter);
