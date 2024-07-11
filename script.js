@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentGroupIndex++;
             const draftLettersDiv = document.getElementById('draft-letters');
             draftLettersDiv.innerHTML = ''; // Clear previous group
-
+    
             group.forEach(letter => {
                 const button = document.createElement('button');
                 button.classList.add('letter-button');
@@ -106,41 +106,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 button.addEventListener('click', () => selectLetter(letter, button));
                 draftLettersDiv.appendChild(button);
             });
-
+    
             document.getElementById('game-board').classList.remove('hidden');
         } else {
             finishLetterSelection();
         }
     }
 
+
     function selectLetter(letter, button) {
+        
         displaySelectedLetters();
         selectedLetters.push(letter);
         button.disabled = true;
-<<<<<<< HEAD
     
         // Check if there are more groups to show
         if (currentGroupIndex < groups.length) {
             showNextGroup();
         } else {
             finishLetterSelection();
-=======
-        displaySelectedLetters();
-        if (selectedLetters.length % 1 === 0) { // Proceed to the next group after selecting 1 letters
-            setTimeout(showNextGroup, 10); // Show next group after a delay
->>>>>>> parent of 0d262f1 (Update script.js)
         }
     }
-
+    
     function displaySelectedLetters() {
         const guessLettersDiv = document.getElementById('guess-letters');
-        guessLettersDiv.innerHTML = Selected Letters: ${selectedLetters.join(', ')};
+        guessLettersDiv.innerHTML = `Selected Letters: ${selectedLetters.join(', ')}`;
     }
-
     function finishLetterSelection() {
         document.getElementById('draft-letters').innerHTML = '';
         possibleWords = checked(selectedLetters);
-        document.getElementById('result').innerText = Number of possible words: ${possibleWords.length};
+        document.getElementById('result').innerText = `Number of possible words: ${possibleWords.length}`;
     }
 
     function submitWord() {
@@ -149,12 +144,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('guess-input').value = '';
 
         if (enteredWords.includes(word)) {
-            document.getElementById('result').innerText = '${word}' has already been entered.;
+            document.getElementById('result').innerText = `'${word}' has already been entered.`;
             return;
         }
 
         if (!isValidWord(word)) {
-            document.getElementById('result').innerText = '${word}' is not in the word list.;
+            document.getElementById('result').innerText = `'${word}' is not in the word list.`;
             return;
         }
 
@@ -164,15 +159,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (usesAllDraftedLetters(word)) {
             totalPoints += 200;
-            document.getElementById('result').innerText = '${word}' scores ${points} points and uses all letters. Bonus: +200 points. Total points: ${totalPoints};
+            document.getElementById('result').innerText = `'${word}' scores ${points} points and uses all letters. Bonus: +200 points. Total points: ${totalPoints}`;
         } else {
-            document.getElementById('result').innerText = '${word}' scores ${points} points. Total points: ${totalPoints};
+            document.getElementById('result').innerText = `'${word}' scores ${points} points. Total points: ${totalPoints}`;
         }
 
         if (!allLettersUsedBonusAwarded && usesAllDraftedLetters(enteredWords.join(''))) {
             totalPoints += 100;
             allLettersUsedBonusAwarded = true;
-            document.getElementById('result').innerText = Bonus: Used all letters at least once! Total points: ${totalPoints};
+            document.getElementById('result').innerText = `Bonus: Used all letters at least once! Total points: ${totalPoints}`;
         }
     }
 
@@ -198,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function finishGame() {
         document.getElementById('game-board').classList.add('hidden');
-        document.getElementById('result').innerText = Game finished. Total points: ${totalPoints}.;
+        document.getElementById('result').innerText = `Game finished. Total points: ${totalPoints}.`;
     }
 
     function checked(letters) {
