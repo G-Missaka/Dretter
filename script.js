@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function playRandomSeed() {
         resetGame();
         randomLetters = generateRandomLetters();
-        //showRandomLetters();
+        showRandomLetters();
         prepareGroups();
         showNextGroup();
     }
