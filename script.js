@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Please enter a valid integer for the seed.');
             return;
         }
+        alert('Pikachu.')
         randomLetters = generateRandomLetters(seedValue);
         prepareGroups();
         showNextGroup();
