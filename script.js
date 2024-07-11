@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         randomLetters = generateRandomLetters(seedValue);
-        alert(randomLetters);
         prepareGroups();
         showNextGroup();
     }
