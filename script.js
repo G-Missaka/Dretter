@@ -42,10 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
         resetGame();
         const seedValue = document.getElementById('seed-input').value;
         if (isNaN(seedValue) || seedValue === '') {
+            alert('pikachu')
             alert('Please enter a valid integer for the seed.');
             return;
         }
-        alert('Pikachu.')
         randomLetters = generateRandomLetters(seedValue);
         prepareGroups();
         showNextGroup();
