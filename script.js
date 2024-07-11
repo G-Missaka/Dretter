@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
         'Y': 4, 'Z': 30
     };
 
+    const randomLettersDiv = document.getElementById('random-letters'); // Assuming there's a div with id 'random-letters' in your HTML
+
     document.getElementById('play-random-seed-button').addEventListener('click', playRandomSeed);
     document.getElementById('play-date-seed-button').addEventListener('click', playDateSeed);
     document.getElementById('set-seed-button').addEventListener('click', setSeed);
@@ -26,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function playRandomSeed() {
         resetGame();
         randomLetters = generateRandomLetters();
+        showRandomLetters();
         prepareGroups();
         showNextGroup();
     }
@@ -34,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resetGame();
         const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
         randomLetters = generateRandomLetters(dateSeed);
+        showRandomLetters();
         prepareGroups();
         showNextGroup();
     }
@@ -46,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         randomLetters = generateRandomLetters(seedValue);
+        showRandomLetters();
         prepareGroups();
         showNextGroup();
     }
@@ -78,6 +83,10 @@ document.addEventListener('DOMContentLoaded', () => {
             randomLetters.push(letter);
         }
         return randomLetters;
+    }
+
+    function showRandomLetters() {
+        randomLettersDiv.innerHTML = `Randomly Selected Letters: ${randomLetters.join(', ')}`;
     }
 
     function prepareGroups() {
@@ -113,7 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
     function selectLetter(letter, button) {
         selectedLetters.push(letter);
         button.disabled = true;
@@ -131,6 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const guessLettersDiv = document.getElementById('guess-letters');
         guessLettersDiv.innerHTML = `Selected Letters: ${selectedLetters.join(', ')}`;
     }
+    
     function finishLetterSelection() {
         document.getElementById('draft-letters').innerHTML = '';
         possibleWords = checked(selectedLetters);
