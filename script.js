@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('finish-button').addEventListener('click', finishGame);
 
     function playRandomSeed() {
+        console.log('Play Random Seed clicked');
         resetGame();
         randomLetters = generateRandomLetters();
         prepareGroups();
@@ -31,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function playDateSeed() {
+        console.log('Play Date Seed clicked');
         resetGame();
         const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
         randomLetters = generateRandomLetters(dateSeed);
@@ -39,12 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setSeed() {
+        console.log('Set Seed clicked');
         resetGame();
         const seedValue = document.getElementById('seed-input').value;
         if (isNaN(seedValue) || seedValue === '') {
             alert('Please enter a valid integer for the seed.');
             return;
-        };
+        }
         randomLetters = generateRandomLetters(seedValue);
         prepareGroups();
         showNextGroup();
@@ -72,8 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
             Math.seedrandom();
         }
         const randomLetters = [];
-        while (randomLetters.length < 2) {
-            document.getElementById('result').innerText = randomLetters.length;
+        for (let i = 0; i < 2; i++) {
             const randomIndex = Math.floor(Math.random() * letters.length);
             const letter = letters.splice(randomIndex, 1)[0];
             randomLetters.push(letter);
