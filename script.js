@@ -34,8 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
         resetGame();
         const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
         randomLetters = generateRandomLetters(dateSeed);
+        alert('randomLetters')
         prepareGroups();
+        alert('here')
         showNextGroup();
+        alert('heer')
     }
 
     function setSeed() {
