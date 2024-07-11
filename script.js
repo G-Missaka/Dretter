@@ -107,7 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 draftLettersDiv.appendChild(button);
             });
             document.getElementById('game-board').classList.remove('hidden');
-        } else {
+        };
+        else {
             finishLetterSelection();
         }
     }
