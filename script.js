@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const remainingLetters = alphabet.filter(letter => !randomLetters.includes(letter));
         remainingLetters.sort(() => Math.random() - 0.5);
         for (let i = 0; i < 4; i++) {
-            groups[i] = remainingLetters.slice(i * 6, (i + 1) * 6); // Adjusted slice to split into 4 groups evenly
+            groups[i] = remainingLetters.slice(i * 5, (i + 1) * 5); // Slices into 4 groups of 5 letters each
         }
         selectedLetters = [...randomLetters];
     }
@@ -95,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentGroupIndex++;
             const draftLettersDiv = document.getElementById('draft-letters');
             draftLettersDiv.innerHTML = ''; // Clear previous group
+
             group.forEach(letter => {
                 const button = document.createElement('button');
                 button.classList.add('letter-button');
@@ -105,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 button.addEventListener('click', () => selectLetter(letter, button));
                 draftLettersDiv.appendChild(button);
             });
+
             document.getElementById('game-board').classList.remove('hidden');
         } else {
             finishLetterSelection();
@@ -115,8 +117,8 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedLetters.push(letter);
         button.disabled = true;
         displaySelectedLetters();
-        if (selectedLetters.length % 6 === 0) { // Proceed to the next group after selecting 6 letters
-            setTimeout(showNextGroup, 1000); // Show next group after a delay
+        if (selectedLetters.length % 1 === 0) { // Proceed to the next group after selecting 1 letters
+            setTimeout(showNextGroup, 10); // Show next group after a delay
         }
     }
 
