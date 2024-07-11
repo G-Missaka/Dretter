@@ -73,13 +73,13 @@ document.addEventListener('DOMContentLoaded', () => {
             Math.seedrandom(seed);
         } else {
             Math.seedrandom();
-        }
+        };
         const randomLetters = [];
         for (let i = 0; i < 2; i++) {
             const randomIndex = Math.floor(Math.random() * letters.length);
             const letter = letters.splice(randomIndex, 1)[0];
             randomLetters.push(letter);
-        }
+        };
         return randomLetters;
     }
 
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
         remainingLetters.sort(() => Math.random() - 0.5);
         for (let i = 0; i < 4; i++) {
             groups[i] = remainingLetters.slice(i * 5, (i + 1) * 5);
-        }
+        };
         selectedLetters = [...randomLetters];
     }
 
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 button.classList.add('letter-button');
                 if (vowels.includes(letter)) {
                     button.classList.add('vowel');
-                }
+                };
                 button.innerText = letter;
                 button.addEventListener('click', () => selectLetter(letter, button));
                 draftLettersDiv.appendChild(button);
