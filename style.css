@@ -1,43 +1,27 @@
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f0f0f0;
-    margin: 0;
+.hidden {
+    display: none;
 }
 
-#game-container {
-    text-align: center;
-    max-width: 600px;
-    width: 100%;
+#controls {
+    margin-bottom: 20px;
 }
 
-#draft-letters, #guess-letters {
-    margin: 20px 0;
+#draft-letters button,
+#submit-word-button,
+#finish-button {
+    margin: 5px;
+}
+
+#guess-letters {
+    margin-top: 10px;
 }
 
 .letter-button {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    margin: 5px;
-    background-color: #ddd;
-    border: none;
+    margin: 3px;
+    padding: 10px;
     font-size: 18px;
-    cursor: pointer;
 }
 
-.letter-button.vowel {
-    background-color: green;
-    color: white;
-}
-
-#result {
-    margin-top: 20px;
-}
-
-.hidden {
-    display: none;
+.vowel {
+    color: red;
 }

@@ -206,3 +206,4 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error loading dictionary:', error);
         });
 });
+
