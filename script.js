@@ -22,7 +22,12 @@ document.getElementById('set-seed-button').addEventListener('click', setSeed);
 document.getElementById('submit-word-button').addEventListener('click', submitWord);
 document.getElementById('finish-button').addEventListener('click', finishGame);
 
+function log(message) {
+    console.log(message);
+}
+
 function playRandomSeed() {
+    log('playRandomSeed called');
     resetGame();
     randomLetters = generateRandomLetters();
     prepareGroups();
@@ -30,6 +35,7 @@ function playRandomSeed() {
 }
 
 function playDateSeed() {
+    log('playDateSeed called');
     resetGame();
     const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
     randomLetters = generateRandomLetters(dateSeed);
@@ -38,6 +44,7 @@ function playDateSeed() {
 }
 
 function setSeed() {
+    log('setSeed called');
     resetGame();
     const seedValue = document.getElementById('seed-input').value;
     if (isNaN(seedValue) || seedValue === '') {
@@ -50,6 +57,7 @@ function setSeed() {
 }
 
 function resetGame() {
+    log('resetGame called');
     selectedLetters = [];
     possibleWords = [];
     enteredWords = [];
@@ -80,6 +88,7 @@ function generateRandomLetters(seed = null) {
 }
 
 function prepareGroups() {
+    log('prepareGroups called');
     const remainingLetters = alphabet.filter(letter => !randomLetters.includes(letter));
     remainingLetters.sort(() => Math.random() - 0.5);
     for (let i = 0; i < 4; i++) {
@@ -89,6 +98,7 @@ function prepareGroups() {
 }
 
 function showNextGroup() {
+    log('showNextGroup called');
     if (currentGroupIndex < groups.length) {
         const group = groups[currentGroupIndex];
         currentGroupIndex++;
@@ -111,6 +121,7 @@ function showNextGroup() {
 }
 
 function selectLetter(letter, button) {
+    log('selectLetter called for letter: ' + letter);
     selectedLetters.push(letter);
     button.disabled = true;
     displaySelectedLetters();
@@ -122,12 +133,14 @@ function displaySelectedLetters() {
 }
 
 function finishLetterSelection() {
+    log('finishLetterSelection called');
     document.getElementById('draft-letters').innerHTML = '';
     possibleWords = checked(selectedLetters);
     document.getElementById('result').innerText = `Number of possible words: ${possibleWords.length}`;
 }
 
 function submitWord() {
+    log('submitWord called');
     const word = document.getElementById('guess-input').value.trim().toUpperCase();
     if (word === '') return;
     document.getElementById('guess-input').value = '';
