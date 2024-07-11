@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'Y': 4, 'Z': 30
     };
 
-    const randomLettersDiv = document.getElementById('random-letters'); // Assuming there's a div with id 'random-letters' in your HTML
+    const randomLettersDiv = document.getElementById('random-letters');
 
     document.getElementById('play-random-seed-button').addEventListener('click', playRandomSeed);
     document.getElementById('play-date-seed-button').addEventListener('click', playDateSeed);
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resetGame();
         const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
         randomLetters = generateRandomLetters(dateSeed);
-        showRandomLetters();
+        showRandomLetters(randomLetters);
         prepareGroups();
         showNextGroup();
     }
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         randomLetters = generateRandomLetters(seedValue);
-        showRandomLetters();
+        showRandomLetters(randomLetters);
         prepareGroups();
         showNextGroup();
     }
@@ -67,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('draft-letters').innerHTML = '';
         document.getElementById('guess-letters').innerHTML = '';
         document.getElementById('guess-input').value = '';
+        randomLettersDiv.innerText = ''; // Clear random letters display
     }
 
     function generateRandomLetters(seed = null) {
@@ -86,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showRandomLetters(randomLetters) {
-        randomLettersDiv.innerHTML = `Randomly Selected Letters: ${randomLetters.join(', ')}`;
+        randomLettersDiv.innerText = `Randomly Selected Letters: ${randomLetters.join(', ')}`;
     }
 
     function prepareGroups() {
