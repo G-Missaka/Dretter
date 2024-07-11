@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentGroupIndex++;
             const draftLettersDiv = document.getElementById('draft-letters');
             draftLettersDiv.innerHTML = ''; // Clear previous group
-
+    
             group.forEach(letter => {
                 const button = document.createElement('button');
                 button.classList.add('letter-button');
@@ -106,27 +106,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 button.addEventListener('click', () => selectLetter(letter, button));
                 draftLettersDiv.appendChild(button);
             });
-
+    
             document.getElementById('game-board').classList.remove('hidden');
         } else {
             finishLetterSelection();
         }
     }
 
+
     function selectLetter(letter, button) {
         selectedLetters.push(letter);
         button.disabled = true;
         displaySelectedLetters();
-        if (selectedLetters.length % 1 === 0) { // Proceed to the next group after selecting 1 letters
-            setTimeout(showNextGroup, 10); // Show next group after a delay
+    
+        // Check if there are more groups to show
+        if (currentGroupIndex < groups.length) {
+            showNextGroup();
+        } else {
+            finishLetterSelection();
         }
     }
-
+    
     function displaySelectedLetters() {
         const guessLettersDiv = document.getElementById('guess-letters');
         guessLettersDiv.innerHTML = `Selected Letters: ${selectedLetters.join(', ')}`;
     }
-
     function finishLetterSelection() {
         document.getElementById('draft-letters').innerHTML = '';
         possibleWords = checked(selectedLetters);
