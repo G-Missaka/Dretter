@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function generateRandomLetters(seed = null) {
-        print('ahoy')
+        alert('ahoy')
         const letters = [...alphabet];
         if (seed) {
             Math.seedrandom(seed);
@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const randomLetters = [];
         while (randomLetters.length < 2) {
+            alert(andomLetters.length)
             const randomIndex = Math.floor(Math.random() * letters.length);
             const letter = letters.splice(randomIndex, 1)[0];
             randomLetters.push(letter);
