@@ -28,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function playRandomSeed() {
         resetGame();
         randomLetters = generateRandomLetters();
-        showRandomLetters();
         prepareGroups();
         showNextGroup();
     }
@@ -37,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resetGame();
         const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
         randomLetters = generateRandomLetters(dateSeed);
-        showRandomLetters();
+
         prepareGroups();
         showNextGroup();
     }
@@ -50,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         randomLetters = generateRandomLetters(seedValue);
-        showRandomLetters();
+
         prepareGroups();
         showNextGroup();
     }
