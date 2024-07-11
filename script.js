@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function playRandomSeed() {
         resetGame();
         randomLetters = generateRandomLetters();
-        showRandomLetters();
+        showRandomLetters(randomLetters);
         prepareGroups();
         showNextGroup();
     }
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return randomLetters;
     }
 
-    function showRandomLetters() {
+    function showRandomLetters(randomLetters) {
         randomLettersDiv.innerHTML = `Randomly Selected Letters: ${randomLetters.join(', ')}`;
     }
 
