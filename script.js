@@ -17,8 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
         'Y': 4, 'Z': 30
     };
 
-    const randomLettersDiv = document.getElementById('random-letters');
-
     document.getElementById('play-random-seed-button').addEventListener('click', playRandomSeed);
     document.getElementById('play-date-seed-button').addEventListener('click', playDateSeed);
     document.getElementById('set-seed-button').addEventListener('click', setSeed);
@@ -36,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
         resetGame();
         const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
         randomLetters = generateRandomLetters(dateSeed);
-
         prepareGroups();
         showNextGroup();
     }
@@ -49,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         randomLetters = generateRandomLetters(seedValue);
-
         prepareGroups();
         showNextGroup();
     }
@@ -66,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('draft-letters').innerHTML = '';
         document.getElementById('guess-letters').innerHTML = '';
         document.getElementById('guess-input').value = '';
-        randomLettersDiv.innerText = ''; // Clear random letters display
     }
 
     function generateRandomLetters(seed = null) {
@@ -83,10 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
             randomLetters.push(letter);
         }
         return randomLetters;
-    }
-
-    function showRandomLetters() {
-        randomLettersDiv.innerText = `Randomly Selected Letters: ${randomLetters.join(', ')}`;
     }
 
     function prepareGroups() {
@@ -122,10 +113,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+
     function selectLetter(letter, button) {
+        displaySelectedLetters();
         selectedLetters.push(letter);
         button.disabled = true;
-        displaySelectedLetters();
     
         // Check if there are more groups to show
         if (currentGroupIndex < groups.length) {
@@ -137,13 +129,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function displaySelectedLetters() {
         const guessLettersDiv = document.getElementById('guess-letters');
-        guessLettersDiv.innerHTML = `Selected Letters: ${selectedLetters.join(', ')}`;
+        guessLettersDiv.innerHTML = Selected Letters: ${selectedLetters.join(', ')};
     }
-    
     function finishLetterSelection() {
         document.getElementById('draft-letters').innerHTML = '';
         possibleWords = checked(selectedLetters);
-        document.getElementById('result').innerText = `Number of possible words: ${possibleWords.length}`;
+        document.getElementById('result').innerText = Number of possible words: ${possibleWords.length};
     }
 
     function submitWord() {
@@ -152,12 +143,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('guess-input').value = '';
 
         if (enteredWords.includes(word)) {
-            document.getElementById('result').innerText = `'${word}' has already been entered.`;
+            document.getElementById('result').innerText = '${word}' has already been entered.;
             return;
         }
 
         if (!isValidWord(word)) {
-            document.getElementById('result').innerText = `'${word}' is not in the word list.`;
+            document.getElementById('result').innerText = '${word}' is not in the word list.;
             return;
         }
 
@@ -167,15 +158,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (usesAllDraftedLetters(word)) {
             totalPoints += 200;
-            document.getElementById('result').innerText = `'${word}' scores ${points} points and uses all letters. Bonus: +200 points. Total points: ${totalPoints}`;
+            document.getElementById('result').innerText = '${word}' scores ${points} points and uses all letters. Bonus: +200 points. Total points: ${totalPoints};
         } else {
-            document.getElementById('result').innerText = `'${word}' scores ${points} points. Total points: ${totalPoints}`;
+            document.getElementById('result').innerText = '${word}' scores ${points} points. Total points: ${totalPoints};
         }
 
         if (!allLettersUsedBonusAwarded && usesAllDraftedLetters(enteredWords.join(''))) {
             totalPoints += 100;
             allLettersUsedBonusAwarded = true;
-            document.getElementById('result').innerText = `Bonus: Used all letters at least once! Total points: ${totalPoints}`;
+            document.getElementById('result').innerText = Bonus: Used all letters at least once! Total points: ${totalPoints};
         }
     }
 
@@ -201,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function finishGame() {
         document.getElementById('game-board').classList.add('hidden');
-        document.getElementById('result').innerText = `Game finished. Total points: ${totalPoints}.`;
+        document.getElementById('result').innerText = Game finished. Total points: ${totalPoints}.;
     }
 
     function checked(letters) {
