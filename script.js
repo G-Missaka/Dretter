@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function playRandomSeed() {
         resetGame();
         randomLetters = generateRandomLetters();
-        showRandomLetters(randomLetters);
+        //showRandomLetters();
         prepareGroups();
         showNextGroup();
     }
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resetGame();
         const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
         randomLetters = generateRandomLetters(dateSeed);
-        showRandomLetters(randomLetters);
+        showRandomLetters();
         prepareGroups();
         showNextGroup();
     }
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         randomLetters = generateRandomLetters(seedValue);
-        showRandomLetters(randomLetters);
+        showRandomLetters();
         prepareGroups();
         showNextGroup();
     }
@@ -86,8 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return randomLetters;
     }
 
-    function showRandomLetters(randomLetters) {
-        const randomLettersDiv = document.getElementById('random-letters');
+    function showRandomLetters() {
         randomLettersDiv.innerText = `Randomly Selected Letters: ${randomLetters.join(', ')}`;
     }
 
