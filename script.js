@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showRandomLetters(randomLetters) {
+        const randomLettersDiv = document.getElementById('random-letters');
         randomLettersDiv.innerText = `Randomly Selected Letters: ${randomLetters.join(', ')}`;
     }
 
