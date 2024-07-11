@@ -190,12 +190,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function checked(letters) {
-        return possibleWords.filter(word => {
-            const wordLetters = word.split('');
-            return wordLetters.every(letter => letters.includes(letter.toUpperCase()));
-        });
+        const validWords = ['example', 'words']; // Placeholder for word checking logic
+        return validWords.filter(word => word.split('').every(letter => letters.includes(letter.toUpperCase())));
     }
-
     fetch('dictionary.txt')
         .then(response => response.text())
         .then(data => {
@@ -205,3 +202,4 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error loading dictionary:', error);
         });
 });
+
