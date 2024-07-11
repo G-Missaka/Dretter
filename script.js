@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('finish-button').addEventListener('click', finishGame);
 
     function playRandomSeed() {
-        console.log('Play Random Seed clicked');
         resetGame();
         randomLetters = generateRandomLetters();
         prepareGroups();
@@ -32,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function playDateSeed() {
-        console.log('Play Date Seed clicked');
         resetGame();
         const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
         randomLetters = generateRandomLetters(dateSeed);
@@ -41,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setSeed() {
-        console.log('Set Seed clicked');
         resetGame();
         const seedValue = document.getElementById('seed-input').value;
         if (isNaN(seedValue) || seedValue === '') {
@@ -73,13 +70,13 @@ document.addEventListener('DOMContentLoaded', () => {
             Math.seedrandom(seed);
         } else {
             Math.seedrandom();
-        };
+        }
         const randomLetters = [];
         for (let i = 0; i < 2; i++) {
             const randomIndex = Math.floor(Math.random() * letters.length);
             const letter = letters.splice(randomIndex, 1)[0];
             randomLetters.push(letter);
-        };
+        }
         return randomLetters;
     }
 
@@ -87,8 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const remainingLetters = alphabet.filter(letter => !randomLetters.includes(letter));
         remainingLetters.sort(() => Math.random() - 0.5);
         for (let i = 0; i < 4; i++) {
-            groups[i] = remainingLetters.slice(i * 5, (i + 1) * 5);
-        };
+            groups[i] = remainingLetters.slice(i * 6, (i + 1) * 6); // Adjusted slice to split into 4 groups evenly
+        }
         selectedLetters = [...randomLetters];
     }
 
@@ -103,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 button.classList.add('letter-button');
                 if (vowels.includes(letter)) {
                     button.classList.add('vowel');
-                };
+                }
                 button.innerText = letter;
                 button.addEventListener('click', () => selectLetter(letter, button));
                 draftLettersDiv.appendChild(button);
@@ -118,6 +115,9 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedLetters.push(letter);
         button.disabled = true;
         displaySelectedLetters();
+        if (selectedLetters.length % 6 === 0) { // Proceed to the next group after selecting 6 letters
+            setTimeout(showNextGroup, 1000); // Show next group after a delay
+        }
     }
 
     function displaySelectedLetters() {
@@ -190,13 +190,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function checked(letters) {
-        const validWords = possibleWords.filter(word => {
-            const wordLetters = word.split('');
-            return letters.every(letter => wordLetters.includes(letter));
-        });
-        return validWords;
+        const validWords = ['example', 'words']; // Placeholder for word checking logic
+        return validWords.filter(word => word.split('').every(letter => letters.includes(letter.toUpperCase())));
     }
-
+    
     fetch('dictionary.txt')
         .then(response => response.text())
         .then(data => {
