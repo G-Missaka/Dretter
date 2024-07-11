@@ -7,19 +7,24 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="game-board" class="hidden">
-        <div id="draft-letters"></div>
-        <div id="guess-letters"></div>
-        <input type="text" id="guess-input" placeholder="Enter your word">
-        <button id="submit-word-button">Submit Word</button>
-        <button id="finish-button">Finish Game</button>
-    </div>
-    <div id="result"></div>
-    <button id="play-random-seed-button">Play Random Seed</button>
-    <button id="play-date-seed-button">Play Date Seed</button>
-    <input type="text" id="seed-input" placeholder="Enter seed">
-    <button id="set-seed-button">Set Seed</button>
+    <div id="game-container">
+        <h1>Word Game</h1>
+        <button id="start-button">Start Game</button>
+        <button id="play-random-seed-button">Play Random Seed</button>
+        <button id="play-date-seed-button">Play Date-based Seed</button>
+        <input type="text" id="seed-input" placeholder="Enter Seed">
+        <button id="set-seed-button">Set Seed</button>
 
+        <div id="game-board" style="display: none;">
+            <div id="draft-letters"></div>
+            <div id="guess-letters"></div>
+            <input type="text" id="guess-input" placeholder="Enter word">
+            <button id="submit-word-button">Submit Word</button>
+            <button id="finish-button">Finish</button>
+        </div>
+
+        <div id="result"></div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
