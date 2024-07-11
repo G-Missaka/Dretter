@@ -34,11 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
         resetGame();
         const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
         randomLetters = generateRandomLetters(dateSeed);
-        alert('randomLetters')
         prepareGroups();
-        alert('here')
         showNextGroup();
-        alert('heer')
     }
 
     function setSeed() {
@@ -68,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function generateRandomLetters(seed = null) {
+        print('ahoy')
         const letters = [...alphabet];
         if (seed) {
             Math.seedrandom(seed);
