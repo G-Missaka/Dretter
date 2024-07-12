@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('result').innerText = `'${word}' scores ${points} points. Total points: ${totalPoints}`;
         }
 
-        if (!allLettersUsedBonusAwarded && usesAllDraftedLetters(enteredWords.join(''))) {
+        if (!allLettersUsedBonusAwarded && checkAllLettersUsed()) {
             totalPoints += 100;
             allLettersUsedBonusAwarded = true;
             document.getElementById('result').innerText = `Bonus: Used all letters at least once! Total points: ${totalPoints}`;
@@ -204,6 +204,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function usesAllDraftedLetters(word) {
         const wordLetters = new Set(word.split(''));
         return selectedLetters.every(letter => wordLetters.has(letter.toLowerCase()));
+    }
+
+    function checkAllLettersUsed() {
+        const allUsedLetters = new Set();
+        enteredWords.forEach(word => {
+            word.split('').forEach(letter => {
+                allUsedLetters.add(letter);
+            });
+        });
+        return selectedLetters.every(letter => allUsedLetters.has(letter.toLowerCase()));
     }
 
     function finishGame() {
