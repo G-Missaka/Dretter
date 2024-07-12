@@ -129,12 +129,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function displaySelectedLetters() {
         const guessLettersDiv = document.getElementById('guess-letters');
-        guessLettersDiv.innerHTML = Selected Letters: ${selectedLetters.join(', ')};
+        guessLettersDiv.innerHTML = `Selected Letters: ${selectedLetters.join(', ')}`;
     }
     function finishLetterSelection() {
         document.getElementById('draft-letters').innerHTML = '';
         possibleWords = checked(selectedLetters);
-        document.getElementById('result').innerText = Number of possible words: ${possibleWords.length};
+        document.getElementById('result').innerText = `Number of possible words: ${possibleWords.length}`;
     }
 
     function submitWord() {
@@ -143,12 +143,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('guess-input').value = '';
 
         if (enteredWords.includes(word)) {
-            document.getElementById('result').innerText = '${word}' has already been entered.;
+            document.getElementById('result').innerText = `'${word}' has already been entered.`;
             return;
         }
 
         if (!isValidWord(word)) {
-            document.getElementById('result').innerText = '${word}' is not in the word list.;
+            document.getElementById('result').innerText = `'${word}' is not in the word list.`;
             return;
         }
 
@@ -158,15 +158,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (usesAllDraftedLetters(word)) {
             totalPoints += 200;
-            document.getElementById('result').innerText = '${word}' scores ${points} points and uses all letters. Bonus: +200 points. Total points: ${totalPoints};
+            document.getElementById('result').innerText = `'${word}' scores ${points} points and uses all letters. Bonus: +200 points. Total points: ${totalPoints}`;
         } else {
-            document.getElementById('result').innerText = '${word}' scores ${points} points. Total points: ${totalPoints};
+            document.getElementById('result').innerText = `'${word}' scores ${points} points. Total points: ${totalPoints}`;
         }
 
         if (!allLettersUsedBonusAwarded && usesAllDraftedLetters(enteredWords.join(''))) {
             totalPoints += 100;
             allLettersUsedBonusAwarded = true;
-            document.getElementById('result').innerText = Bonus: Used all letters at least once! Total points: ${totalPoints};
+            document.getElementById('result').innerText = `Bonus: Used all letters at least once! Total points: ${totalPoints}`;
         }
     }
 
@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function finishGame() {
         document.getElementById('game-board').classList.add('hidden');
-        document.getElementById('result').innerText = Game finished. Total points: ${totalPoints}.;
+        document.getElementById('result').innerText = `Game finished. Total points: ${totalPoints}.`;
     }
 
     function checked(letters) {
