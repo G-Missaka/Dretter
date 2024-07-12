@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let allLettersUsedBonusAwarded = false;
     let currentGroupIndex = 0;
     const groups = [];
+    let gameFinished = false;
 
     const letterPoints = {
         'A': 0, 'B': 3, 'C': 3, 'D': 2, 'E': 0, 'F': 4, 'G': 2, 'H': 4,
@@ -68,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         totalPoints = 0;
         allLettersUsedBonusAwarded = false;
         currentGroupIndex = 0;
+        gameFinished = false;
         document.getElementById('result').innerText = '';
         document.getElementById('announcement').innerText = '';
         document.getElementById('missed-words').innerText = '';
@@ -75,6 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('draft-letters').innerHTML = '';
         document.getElementById('guess-letters').innerHTML = '';
         document.getElementById('guess-input').value = '';
+        document.getElementById('guess-input').disabled = false;
+        document.getElementById('submit-word-button').disabled = false;
     }
 
     function generateRandomLetters(seed = null) {
@@ -155,6 +159,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function submitWord() {
+        if (gameFinished) return;
+
         const word = document.getElementById('guess-input').value.trim().toLowerCase();
 
         if (word === '') return;
@@ -218,6 +224,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function finishGame() {
+        gameFinished = true;
+        document.getElementById('guess-input').disabled = true;
+        document.getElementById('submit-word-button').disabled = true;
         document.getElementById('game-board').classList.add('hidden');
         const missedWords = possibleWords.filter(word => !enteredWords.includes(word));
         document.getElementById('result').innerText = `Game finished. Total points: ${totalPoints}.`;
@@ -252,3 +261,4 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error loading dictionary:', error);
         });
 });
+
