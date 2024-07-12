@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentGroupIndex = 0;
     const groups = [];
     let gameFinished = false;
+    let wordCount = 0; // Word counter
 
     const letterPoints = {
         'A': 0, 'B': 3, 'C': 3, 'D': 2, 'E': 0, 'F': 4, 'G': 2, 'H': 4,
@@ -18,49 +19,60 @@ document.addEventListener('DOMContentLoaded', () => {
         'Y': 4, 'Z': 30
     };
 
+    // Event listeners for game controls
     document.getElementById('play-random-seed-button').addEventListener('click', playRandomSeed);
     document.getElementById('play-date-seed-button').addEventListener('click', playDateSeed);
     document.getElementById('set-seed-button').addEventListener('click', setSeed);
-    document.getElementById('submit-word-button').addEventListener('click', submitWord);
     document.getElementById('finish-button').addEventListener('click', finishGame);
+
+    // Fetch dictionary data and start the game
+    fetch('dictionary.txt')
+        .then(response => response.text())
+        .then(data => {
+            possibleWords = data.split('\n').map(word => word.trim().toLowerCase());
+            // Enable game controls after loading dictionary
+            enableGameControls();
+        })
+        .catch(error => {
+            console.error('Error loading dictionary:', error);
+            displayAnnouncement('Error loading dictionary. Please try again later.');
+        });
+
+    // Enable game controls once dictionary is loaded
+    function enableGameControls() {
+        document.getElementById('play-random-seed-button').disabled = false;
+        document.getElementById('play-date-seed-button').disabled = false;
+        document.getElementById('set-seed-button').disabled = false;
+    }
 
     function playRandomSeed() {
         resetGame();
-        if (possibleWords.length > 0) {
-            randomLetters = generateRandomLetters();
-            prepareGroups();
-            showNextGroup();
-        } else {
-            displayAnnouncement('Dictionary is still loading. Please try again shortly.');
-        }
+        randomLetters = generateRandomLetters();
+        prepareGroups();
+        showNextGroup();
+        showGameButtons(); // Show submit and finish buttons after starting the game
     }
 
     function playDateSeed() {
         resetGame();
-        if (possibleWords.length > 0) {
-            const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-            randomLetters = generateRandomLetters(dateSeed);
-            prepareGroups();
-            showNextGroup();
-        } else {
-            displayAnnouncement('Dictionary is still loading. Please try again shortly.');
-        }
+        const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        randomLetters = generateRandomLetters(dateSeed);
+        prepareGroups();
+        showNextGroup();
+        showGameButtons(); // Show submit and finish buttons after starting the game
     }
 
     function setSeed() {
         resetGame();
-        if (possibleWords.length > 0) {
-            const seedValue = document.getElementById('seed-input').value;
-            if (isNaN(seedValue) || seedValue === '') {
-                displayAnnouncement('Please enter a valid integer for the seed.');
-                return;
-            }
-            randomLetters = generateRandomLetters(seedValue);
-            prepareGroups();
-            showNextGroup();
-        } else {
-            displayAnnouncement('Dictionary is still loading. Please try again shortly.');
+        const seedValue = document.getElementById('seed-input').value;
+        if (isNaN(seedValue) || seedValue === '') {
+            displayAnnouncement('Please enter a valid integer for the seed.');
+            return;
         }
+        randomLetters = generateRandomLetters(seedValue);
+        prepareGroups();
+        showNextGroup();
+        showGameButtons(); // Show submit and finish buttons after starting the game
     }
 
     function resetGame() {
@@ -70,6 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
         allLettersUsedBonusAwarded = false;
         currentGroupIndex = 0;
         gameFinished = false;
+        wordCount = 0; // Reset word counter
+        updateWordCount(); // Update UI to show word count
         document.getElementById('result').innerText = '';
         document.getElementById('announcement').innerText = '';
         document.getElementById('missed-words').innerText = '';
@@ -79,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('guess-input').value = '';
         document.getElementById('guess-input').disabled = false;
         document.getElementById('submit-word-button').disabled = false;
+        hideGameButtons(); // Hide submit and finish buttons initially
     }
 
     function generateRandomLetters(seed = null) {
@@ -179,6 +194,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const points = calculatePoints(word);
         totalPoints += points;
         enteredWords.push(word);
+        wordCount++; // Increment word counter
+        updateWordCount(); // Update UI to show word count
 
         if (usesAllDraftedLetters(word)) {
             totalPoints += 200;
@@ -233,27 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('result').innerText = `Game finished. Total points: ${totalPoints}. Missed points if all words submitted: ${missedPoints}`;
         displayMissedWords(missedWords);
     }
-    
-    function calculateMissedPoints(missedWords) {
-        let missedPoints = 0;
-    
-        // Calculate points for each missed word
-        missedWords.forEach(word => {
-            missedPoints += calculatePoints(word);
-    
-            // Check if missed word would complete using all letters
-            if (usesAllDraftedLetters(word)) {
-                missedPoints += 200;
-            }
-        });
-    
-        // Check if bonus for using all letters at least once was missed
-        if (!allLettersUsedBonusAwarded && checkAllLettersUsed()) {
-            missedPoints += 100;
-        }
-    
-        return missedPoints;
-    }
+
     function checked(letters) {
         const selectedSet = new Set(letters.map(letter => letter.toLowerCase()));
         return possibleWords.filter(word => {
@@ -273,12 +270,35 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('missed-words').innerText = `Missed words: ${words.join(', ')}`;
     }
 
-    fetch('dictionary.txt')
-        .then(response => response.text())
-        .then(data => {
-            possibleWords = data.split('\n').map(word => word.trim().toLowerCase());
-        })
-        .catch(error => {
-            console.error('Error loading dictionary:', error);
-        });
+    function updateWordCount() {
+        document.getElementById('word-count').innerText = `Words: ${wordCount} / ${possibleWords.length}`;
+    }
+
+    function hideGameButtons() {
+        document.getElementById('submit-word-button').style.display = 'none';
+        document.getElementById('finish-button').style.display = 'none';
+    }
+
+    function showGameButtons() {
+        document.getElementById('submit-word-button').style.display = 'inline-block';
+        document.getElementById('finish-button').style.display = 'inline-block';
+    }
+
+    // Event listener for submitting a word with Enter key
+    document.getElementById('guess-input').addEventListener('keydown', event => {
+        if (event.keyCode === 13) { // Enter key
+            submitWord();
+        }
+    });
+
+    // Event listener for drafting a letter with keyboard equivalent
+    document.addEventListener('keydown', event => {
+        const key = event.key.toUpperCase();
+        if (alphabet.includes(key)) {
+            const button = document.querySelector(`.letter-button:not([disabled])[data-letter="${key}"]`);
+            if (button) {
+                button.click();
+            }
+        }
+    });
 });
