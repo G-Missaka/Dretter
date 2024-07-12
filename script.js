@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return randomLetters;
     }
- 
+
     function prepareGroups() {
         const remainingLetters = alphabet.filter(letter => !randomLetters.includes(letter));
         remainingLetters.sort(() => Math.random() - 0.5);
