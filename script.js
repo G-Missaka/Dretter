@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function submitWord() {
-        const word = document.getElementById('guess-input').value.trim().toUpperCase();
+        const word = document.getElementById('guess-input').value.trim().toLowerCase();
 
         if (word === '') return;
         document.getElementById('guess-input').value = '';
