@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function isValidWord(word) {
         const selectedSet = new Set(selectedLetters);
-        return possibleWords.includes(word.toLowerCase()) && word.length >= 5 && word.split('').every(letter => selectedSet.has(letter.toLowerCase()));
+        return possibleWords.includes(word.toLowerCase()); 
     }
 
     function calculatePoints(word) {
@@ -204,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return possibleWords.filter(word => {
             const wordLetters = word.split('');
             const selectedSet = new Set(letters.map(letter => letter.toLowerCase()));
+            alert(wordLetters)
             return wordLetters.every(letter => selectedSet.has(letter.toLowerCase()));
         });
     }
