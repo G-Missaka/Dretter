@@ -98,6 +98,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const draftLettersDiv = document.getElementById('draft-letters');
             draftLettersDiv.innerHTML = ''; // Clear previous group
     
+            // Display selected letters
+            displaySelectedLetters();
+    
+            // Display draft letters
             group.forEach(letter => {
                 const button = document.createElement('button');
                 button.classList.add('letter-button');
@@ -105,7 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     button.classList.add('vowel');
                 }
                 button.innerText = letter;
-                displaySelectedLetters();
                 button.addEventListener('click', () => selectLetter(letter, button));
                 draftLettersDiv.appendChild(button);
             });
@@ -115,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
             finishLetterSelection();
         }
     }
+    
 
 
     function selectLetter(letter, button) {
@@ -199,9 +203,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function checked(letters) {
-        const validWords = ['example', 'words']; // Placeholder for word checking logic
-        return validWords.filter(word => word.split('').every(letter => letters.includes(letter.toUpperCase())));
+        return possibleWords.filter(word => {
+            const wordLetters = word.split('');
+            return wordLetters.every(letter => letters.includes(letter.toUpperCase()));
+        });
     }
+    
 
     fetch('dictionary.txt')
         .then(response => response.text())
