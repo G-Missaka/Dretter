@@ -25,3 +25,15 @@
 .vowel {
     color: red;
 }
+
+.announcement {
+    margin-top: 10px;
+    font-size: 1.2em;
+    color: red;
+}
+
+.missed-words {
+    margin-top: 10px;
+    font-size: 1.2em;
+    color: blue;
+}
