@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-
-
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     const vowels = 'AEIOU'.split('');
     let randomLetters = [];
@@ -118,8 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
             finishLetterSelection();
         }
     }
-    
-
 
     function selectLetter(letter, button) {
         selectedLetters.push(letter);
@@ -137,6 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const guessLettersDiv = document.getElementById('guess-letters');
         guessLettersDiv.innerHTML = `Selected Letters: ${selectedLetters.join(', ')}`;
     }
+
     function finishLetterSelection() {
         document.getElementById('draft-letters').innerHTML = '';
         possibleWords = checked(selectedLetters);
@@ -152,12 +149,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (enteredWords.includes(word)) {
             document.getElementById('result').innerText = `'${word}' has already been entered.`;
             return;
-        } else {
-            document.getElementById('result').innerText = `'${word}' scores ${points} points. Total points: ${totalPoints}`;
         }
 
         if (!isValidWord(word)) {
-            document.getElementById('result').innerText = `'${word}' is not in the word list.`;
+            document.getElementById('result').innerText = `'${word}' is not in the word list or does not use the selected letters.`;
             return;
         }
 
@@ -181,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function isValidWord(word) {
         const selectedSet = new Set(selectedLetters);
-        return possibleWords.includes(word.toLowerCase()) && word.split('').every(letter => selectedSet.has(letter.toLowerCase()));
+        return possibleWords.includes(word.toLowerCase()) && word.length >= 5 && word.split('').every(letter => selectedSet.has(letter.toLowerCase()));
     }
 
     function calculatePoints(word) {
@@ -204,7 +199,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('game-board').classList.add('hidden');
         document.getElementById('result').innerText = `Game finished. Total points: ${totalPoints}.`;
     }
-
 
     function checked(letters) {
         return possibleWords.filter(word => {
