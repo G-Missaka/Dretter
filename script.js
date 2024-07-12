@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     const vowels = 'AEIOU'.split('');
     let randomLetters = [];
@@ -32,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function playDateSeed() {
         resetGame();
+        alert('pikachu')
         const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
         randomLetters = generateRandomLetters(dateSeed);
         prepareGroups();
