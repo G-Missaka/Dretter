@@ -23,6 +23,55 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('set-seed-button').addEventListener('click', setSeed);
     document.getElementById('submit-word-button').addEventListener('click', submitWord);
     document.getElementById('finish-button').addEventListener('click', finishGame);
+    document.getElementById('show-leaderboard-button').addEventListener('click', showLeaderboard);
+
+    function finishGame() {
+        gameFinished = true;
+        document.getElementById('guess-input').disabled = true;
+        document.getElementById('submit-word-button').disabled = true;
+        document.getElementById('game-board').classList.add('hidden');
+        const missedWords = possibleWords.filter(word => !enteredWords.includes(word));
+        const missedPoints = calculateMissedPoints(missedWords);
+        document.getElementById('result').innerText = `Game finished. Total points: ${totalPoints}. Missed points if all words submitted: ${missedPoints}`;
+        displayMissedWords(missedWords);
+    }
+
+    function calculateMissedPoints(missedWords) {
+        let missedPoints = 0;
+
+        missedWords.forEach(word => {
+            if (isValidWord(word)) {
+                missedPoints += calculatePoints(word);
+
+                if (usesAllDraftedLetters(word)) {
+                    missedPoints += 200; // Bonus for using all letters
+                }
+            }
+        });
+
+        return missedPoints;
+    }
+
+    function isValidWord(word) {
+        const selectedSet = new Set(selectedLetters.map(letter => letter.toLowerCase()));
+        return possibleWords.includes(word) && word.split('').every(letter => selectedSet.has(letter));
+    }
+
+    function calculatePoints(word) {
+        let points = 0;
+        word.split('').forEach(letter => {
+            points += letterPoints[letter.toUpperCase()] || 0;
+        });
+        if (word.endsWith('s') && possibleWords.includes(word.slice(0, -1))) {
+            points = Math.floor(points / 3);
+        }
+        return points;
+    }
+
+    function usesAllDraftedLetters(word) {
+        const wordLetters = new Set(word.split(''));
+        return selectedLetters.every(letter => wordLetters.has(letter.toLowerCase()));
+    }
 
     function playRandomSeed() {
         resetGame();
@@ -223,16 +272,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return selectedLetters.every(letter => allUsedLetters.has(letter.toLowerCase()));
     }
 
-    function finishGame() {
-        gameFinished = true;
-        document.getElementById('guess-input').disabled = true;
-        document.getElementById('submit-word-button').disabled = true;
-        document.getElementById('game-board').classList.add('hidden');
-        const missedWords = possibleWords.filter(word => !enteredWords.includes(word));
-        document.getElementById('result').innerText = `Game finished. Total points: ${totalPoints}.`;
-        displayMissedWords(missedWords);
-    }
-
     function checked(letters) {
         const selectedSet = new Set(letters.map(letter => letter.toLowerCase()));
         return possibleWords.filter(word => {
@@ -261,4 +300,3 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error loading dictionary:', error);
         });
 });
-
