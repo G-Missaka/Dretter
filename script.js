@@ -25,34 +25,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function playRandomSeed() {
         resetGame();
-        randomLetters = generateRandomLetters();
-        prepareGroups();
-        showNextGroup();
+        if (possibleWords.length > 0) {
+            randomLetters = generateRandomLetters();
+            prepareGroups();
+            showNextGroup();
+        } else {
+            alert('Dictionary is still loading. Please try again shortly.');
+        }
     }
 
     function playDateSeed() {
         resetGame();
-        const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-        randomLetters = generateRandomLetters(dateSeed);
-        prepareGroups();
-        showNextGroup();
+        if (possibleWords.length > 0) {
+            const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            randomLetters = generateRandomLetters(dateSeed);
+            prepareGroups();
+            showNextGroup();
+        } else {
+            alert('Dictionary is still loading. Please try again shortly.');
+        }
     }
 
     function setSeed() {
         resetGame();
-        const seedValue = document.getElementById('seed-input').value;
-        if (isNaN(seedValue) || seedValue === '') {
-            alert('Please enter a valid integer for the seed.');
-            return;
+        if (possibleWords.length > 0) {
+            const seedValue = document.getElementById('seed-input').value;
+            if (isNaN(seedValue) || seedValue === '') {
+                alert('Please enter a valid integer for the seed.');
+                return;
+            }
+            randomLetters = generateRandomLetters(seedValue);
+            prepareGroups();
+            showNextGroup();
+        } else {
+            alert('Dictionary is still loading. Please try again shortly.');
         }
-        randomLetters = generateRandomLetters(seedValue);
-        prepareGroups();
-        showNextGroup();
     }
 
     function resetGame() {
         selectedLetters = [];
-        possibleWords = [];
         enteredWords = [];
         totalPoints = 0;
         allLettersUsedBonusAwarded = false;
@@ -202,7 +213,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function checked(letters) {
         const selectedSet = new Set(letters.map(letter => letter.toLowerCase()));
-        alert(possibleWords)
         return possibleWords.filter(word => {
             if (word.length < 5) {
                 return false;
@@ -221,4 +231,3 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error loading dictionary:', error);
         });
 });
-
