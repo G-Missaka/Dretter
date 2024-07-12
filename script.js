@@ -151,6 +151,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (enteredWords.includes(word)) {
             document.getElementById('result').innerText = `'${word}' has already been entered.`;
             return;
+        } else {
+            document.getElementById('result').innerText = `'${word}' scores ${points} points. Total points: ${totalPoints}`;
         }
 
         if (!isValidWord(word)) {
@@ -204,7 +206,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function checked(letters) {
         return possibleWords.filter(word => {
             const wordLetters = word.split('');
-            alert(wordLetters)
             return wordLetters.every(letter => letters.includes(letter.toUpperCase()));
         });
     }
@@ -214,7 +215,6 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.text())
         .then(data => {
             possibleWords = data.split('\n').map(word => word.trim().toLowerCase());
-            alert(possibleWords)
         })
         .catch(error => {
             console.error('Error loading dictionary:', error);
