@@ -202,8 +202,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function usesAllDraftedLetters(word) {
-        const wordLetters = word.split('');
-        return randomLetters.every(letter => wordLetters.includes(letter));
+        const wordLetters = new Set(word.split(''));
+        return selectedLetters.every(letter => wordLetters.has(letter.toLowerCase()));
     }
 
     function finishGame() {
