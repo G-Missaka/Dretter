@@ -201,14 +201,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function checked(letters) {
-        const selectedSet = new Set(letters.map(letter => letter.toLowerCase()));
+        const selectedSet = new Set(letters.map(letters => letters.toLowerCase()));
         alert(selectedSet)
         return possibleWords.filter(word => {
             if (word.length < 5) {
                 return false;
             }
             const wordLetters = word.split('');
-            return wordLetters.every(letter => selectedSet.has(letter.toLowerCase()));
+            return wordLetters.every(letters => selectedSet.has(letter.toLowerCase()));
         });
     }
 
