@@ -38,19 +38,6 @@
     color: blue;
 }
 
-#leaderboard {
-    margin-top: 20px;
-}
-
-#leaderboard-list {
-    list-style-type: none;
-    padding: 0;
-}
-
-#leaderboard-list li {
-    margin-bottom: 5px;
-}
-
 .hidden {
     display: none;
 }
