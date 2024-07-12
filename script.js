@@ -105,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     button.classList.add('vowel');
                 }
                 button.innerText = letter;
+                displaySelectedLetters();
                 button.addEventListener('click', () => selectLetter(letter, button));
                 draftLettersDiv.appendChild(button);
             });
