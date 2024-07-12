@@ -145,6 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function submitWord() {
         const word = document.getElementById('guess-input').value.trim().toUpperCase();
+
         if (word === '') return;
         document.getElementById('guess-input').value = '';
 
@@ -179,7 +180,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function isValidWord(word) {
-        return possibleWords.includes(word.toLowerCase());
+        const selectedSet = new Set(selectedLetters);
+        return possibleWords.includes(word.toLowerCase()) && word.split('').every(letter => selectedSet.has(letter.toLowerCase()));
     }
 
     function calculatePoints(word) {
