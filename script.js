@@ -122,10 +122,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     function selectLetter(letter, button) {
-        displaySelectedLetters();
         selectedLetters.push(letter);
         button.disabled = true;
-    
+        displaySelectedLetters();
         // Check if there are more groups to show
         if (currentGroupIndex < groups.length) {
             showNextGroup();
