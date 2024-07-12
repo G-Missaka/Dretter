@@ -175,16 +175,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function isValidWord(word) {
-        const selectedSet = new Set(selectedLetters);
-        return possibleWords.includes(word.toLowerCase()); 
+        const selectedSet = new Set(selectedLetters.map(letter => letter.toLowerCase()));
+        return possibleWords.includes(word) && word.split('').every(letter => selectedSet.has(letter));
     }
 
     function calculatePoints(word) {
         let points = 0;
         word.split('').forEach(letter => {
-            points += letterPoints[letter] || 0;
+            points += letterPoints[letter.toUpperCase()] || 0;
         });
-        if (word.endsWith('S') && possibleWords.includes(word.slice(0, -1).toLowerCase())) {
+        if (word.endsWith('s') && possibleWords.includes(word.slice(0, -1))) {
             points = Math.floor(points / 3);
         }
         return points;
@@ -201,14 +201,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function checked(letters) {
-        const selectedSet = new Set(letters.map(letters => letters.toLowerCase()));
-        alert(selectedSet)
+        const selectedSet = new Set(letters.map(letter => letter.toLowerCase()));
         return possibleWords.filter(word => {
             if (word.length < 5) {
                 return false;
             }
             const wordLetters = word.split('');
-            return wordLetters.every(letters => selectedSet.has(letter.toLowerCase()));
+            return wordLetters.every(letter => selectedSet.has(letter.toLowerCase()));
         });
     }
 
@@ -221,3 +220,4 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error loading dictionary:', error);
         });
 });
+
