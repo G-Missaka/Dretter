@@ -255,13 +255,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function checked(letters) {
         const selectedSet = new Set(letters.map(letter => letter.toLowerCase()));
-        return possibleWords.filter(word => {
+        const filteredWords = possibleWords.filter(word => {
             if (word.length < 5) {
-                return false; // Exclude words shorter than 5 letters
+                return false;
             }
             const wordLetters = new Set(word.split(''));
-            return [...wordLetters].every(letter => selectedSet.has(letter.toLowerCase()));
+            const validWord = [...wordLetters].every(letter => selectedSet.has(letter.toLowerCase()));
+            console.log(`Checking word '${word}': Valid? ${validWord}`);
+            return validWord;
         });
+        console.log('Filtered words:', filteredWords); // Log filtered words to check results
+        return filteredWords;
     }
 
     function displayAnnouncement(message) {
