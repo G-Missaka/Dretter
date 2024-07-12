@@ -149,6 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('draft-letters').innerHTML = '';
         possibleWords = checked(selectedLetters);
         document.getElementById('result').innerText = `Number of possible words: ${possibleWords.length}`;
+        alert('Only 5-letter (or more) words are allowed.');
     }
 
     function submitWord() {
@@ -219,6 +220,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function finishGame() {
         document.getElementById('game-board').classList.add('hidden');
         document.getElementById('result').innerText = `Game finished. Total points: ${totalPoints}.`;
+        const missedWords = possibleWords.filter(word => !enteredWords.includes(word));
+        alert(`You missed the following words: ${missedWords.join(', ')}`);
     }
 
     function checked(letters) {
