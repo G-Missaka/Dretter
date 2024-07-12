@@ -229,10 +229,31 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('submit-word-button').disabled = true;
         document.getElementById('game-board').classList.add('hidden');
         const missedWords = possibleWords.filter(word => !enteredWords.includes(word));
-        document.getElementById('result').innerText = `Game finished. Total points: ${totalPoints}.`;
+        const missedPoints = calculateMissedPoints(missedWords);
+        document.getElementById('result').innerText = `Game finished. Total points: ${totalPoints}. Missed points if all words submitted: ${missedPoints}`;
         displayMissedWords(missedWords);
     }
-
+    
+    function calculateMissedPoints(missedWords) {
+        let missedPoints = 0;
+    
+        // Calculate points for each missed word
+        missedWords.forEach(word => {
+            missedPoints += calculatePoints(word);
+    
+            // Check if missed word would complete using all letters
+            if (usesAllDraftedLetters(word)) {
+                missedPoints += 200;
+            }
+        });
+    
+        // Check if bonus for using all letters at least once was missed
+        if (!allLettersUsedBonusAwarded && checkAllLettersUsed()) {
+            missedPoints += 100;
+        }
+    
+        return missedPoints;
+    }
     function checked(letters) {
         const selectedSet = new Set(letters.map(letter => letter.toLowerCase()));
         return possibleWords.filter(word => {
