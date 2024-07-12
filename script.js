@@ -201,8 +201,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function checked(letters) {
-        alert(letters)
         const selectedSet = new Set(letters.map(letter => letter.toLowerCase()));
+        alert(possibleWords)
         return possibleWords.filter(word => {
             if (word.length < 5) {
                 return false;
