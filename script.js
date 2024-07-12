@@ -24,45 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('submit-word-button').addEventListener('click', submitWord);
     document.getElementById('finish-button').addEventListener('click', finishGame);
 
-    function playRandomSeed() {
-        resetGame();
-        if (possibleWords.length > 0) {
-            randomLetters = generateRandomLetters();
-            prepareGroups();
-            showNextGroup();
-        } else {
-            displayAnnouncement('Dictionary is still loading. Please try again shortly.');
-        }
-    }
-
-    function playDateSeed() {
-        resetGame();
-        if (possibleWords.length > 0) {
-            const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-            randomLetters = generateRandomLetters(dateSeed);
-            prepareGroups();
-            showNextGroup();
-        } else {
-            displayAnnouncement('Dictionary is still loading. Please try again shortly.');
-        }
-    }
-
-    function setSeed() {
-        resetGame();
-        if (possibleWords.length > 0) {
-            const seedValue = document.getElementById('seed-input').value;
-            if (isNaN(seedValue) || seedValue === '') {
-                displayAnnouncement('Please enter a valid integer for the seed.');
-                return;
-            }
-            randomLetters = generateRandomLetters(seedValue);
-            prepareGroups();
-            showNextGroup();
-        } else {
-            displayAnnouncement('Dictionary is still loading. Please try again shortly.');
-        }
-    }
-
     function resetGame() {
         selectedLetters = [];
         enteredWords = [];
@@ -78,9 +39,54 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('guess-letters').innerHTML = '';
         document.getElementById('guess-input').value = '';
         document.getElementById('guess-input').disabled = false;
-        document.getElementById('submit-word-button').disabled = false;
+        document.getElementById('submit-word-button').classList.add('hidden');
+        document.getElementById('finish-button').classList.add('hidden');
     }
-
+    
+    function playRandomSeed() {
+        resetGame();
+        if (possibleWords.length > 0) {
+            randomLetters = generateRandomLetters();
+            prepareGroups();
+            showNextGroup();
+            document.getElementById('submit-word-button').classList.remove('hidden');
+            document.getElementById('finish-button').classList.remove('hidden');
+        } else {
+            displayAnnouncement('Dictionary is still loading. Please try again shortly.');
+        }
+    }
+    
+    function playDateSeed() {
+        resetGame();
+        if (possibleWords.length > 0) {
+            const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            randomLetters = generateRandomLetters(dateSeed);
+            prepareGroups();
+            showNextGroup();
+            document.getElementById('submit-word-button').classList.remove('hidden');
+            document.getElementById('finish-button').classList.remove('hidden');
+        } else {
+            displayAnnouncement('Dictionary is still loading. Please try again shortly.');
+        }
+    }
+    
+    function setSeed() {
+        resetGame();
+        if (possibleWords.length > 0) {
+            const seedValue = document.getElementById('seed-input').value;
+            if (isNaN(seedValue) || seedValue === '') {
+                displayAnnouncement('Please enter a valid integer for the seed.');
+                return;
+            }
+            randomLetters = generateRandomLetters(seedValue);
+            prepareGroups();
+            showNextGroup();
+            document.getElementById('submit-word-button').classList.remove('hidden');
+            document.getElementById('finish-button').classList.remove('hidden');
+        } else {
+            displayAnnouncement('Dictionary is still loading. Please try again shortly.');
+        }
+    }
     function generateRandomLetters(seed = null) {
         const letters = [...alphabet];
         if (seed) {
