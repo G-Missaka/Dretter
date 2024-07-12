@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentGroupIndex = 0;
     const groups = [];
     let gameFinished = false;
-    let wordCount = 0; // Word counter
 
     const letterPoints = {
         'A': 0, 'B': 3, 'C': 3, 'D': 2, 'E': 0, 'F': 4, 'G': 2, 'H': 4,
@@ -82,8 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
         allLettersUsedBonusAwarded = false;
         currentGroupIndex = 0;
         gameFinished = false;
-        wordCount = 0; // Reset word counter
-        updateWordCount(); // Update UI to show word count
         document.getElementById('result').innerText = '';
         document.getElementById('announcement').innerText = '';
         document.getElementById('missed-words').innerText = '';
@@ -139,6 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     button.classList.add('vowel');
                 }
                 button.innerText = letter;
+                button.dataset.letter = letter; // Add dataset attribute for keyboard input
                 button.addEventListener('click', () => selectLetter(letter, button));
                 draftLettersDiv.appendChild(button);
             });
@@ -173,73 +171,6 @@ document.addEventListener('DOMContentLoaded', () => {
         displayAnnouncement('Only 5-letter (or more) words are allowed.');
     }
 
-    function submitWord() {
-        if (gameFinished) return;
-
-        const word = document.getElementById('guess-input').value.trim().toLowerCase();
-
-        if (word === '') return;
-        document.getElementById('guess-input').value = '';
-
-        if (enteredWords.includes(word)) {
-            document.getElementById('result').innerText = `'${word}' has already been entered.`;
-            return;
-        }
-
-        if (!isValidWord(word)) {
-            document.getElementById('result').innerText = `'${word}' is not in the word list or does not use the selected letters.`;
-            return;
-        }
-
-        const points = calculatePoints(word);
-        totalPoints += points;
-        enteredWords.push(word);
-        wordCount++; // Increment word counter
-        updateWordCount(); // Update UI to show word count
-
-        if (usesAllDraftedLetters(word)) {
-            totalPoints += 200;
-            document.getElementById('result').innerText = `'${word}' scores ${points} points and uses all letters. Bonus: +200 points. Total points: ${totalPoints}`;
-        } else {
-            document.getElementById('result').innerText = `'${word}' scores ${points} points. Total points: ${totalPoints}`;
-        }
-
-        if (!allLettersUsedBonusAwarded && checkAllLettersUsed()) {
-            totalPoints += 100;
-            allLettersUsedBonusAwarded = true;
-            document.getElementById('result').innerText = `Bonus: Used all letters at least once! Total points: ${totalPoints}`;
-        }
-    }
-
-    function isValidWord(word) {
-        const selectedSet = new Set(selectedLetters.map(letter => letter.toLowerCase()));
-        return possibleWords.includes(word) && word.split('').every(letter => selectedSet.has(letter));
-    }
-
-    function calculatePoints(word) {
-        let points = 0;
-        word.split('').forEach(letter => {
-            points += letterPoints[letter.toUpperCase()] || 0;
-        });
-        if (word.endsWith('s') && possibleWords.includes(word.slice(0, -1))) {
-            points = Math.floor(points / 3);
-        }
-        return points;
-    }
-
-    function usesAllDraftedLetters(word) {
-        const wordLetters = new Set(word.split(''));
-        return selectedLetters.every(letter => wordLetters.has(letter.toLowerCase()));
-    }
-
-    function checkAllLettersUsed() {
-        const allUsedLetters = new Set();
-        enteredWords.forEach(word => {
-            word.split('').forEach(letter => allUsedLetters.add(letter.toLowerCase()));
-        });
-        return selectedLetters.every(letter => allUsedLetters.has(letter.toLowerCase()));
-    }
-
     function finishGame() {
         gameFinished = true;
         document.getElementById('guess-input').disabled = true;
@@ -270,10 +201,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('missed-words').innerText = `Missed words: ${words.join(', ')}`;
     }
 
-    function updateWordCount() {
-        document.getElementById('word-count').innerText = `Words: ${wordCount} / ${possibleWords.length}`;
-    }
-
     function hideGameButtons() {
         document.getElementById('submit-word-button').style.display = 'none';
         document.getElementById('finish-button').style.display = 'none';
@@ -284,21 +211,22 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('finish-button').style.display = 'inline-block';
     }
 
-    // Event listener for submitting a word with Enter key
-    document.getElementById('guess-input').addEventListener('keydown', event => {
-        if (event.keyCode === 13) { // Enter key
-            submitWord();
-        }
-    });
 
-    // Event listener for drafting a letter with keyboard equivalent
-    document.addEventListener('keydown', event => {
-        const key = event.key.toUpperCase();
-        if (alphabet.includes(key)) {
-            const button = document.querySelector(`.letter-button:not([disabled])[data-letter="${key}"]`);
-            if (button) {
-                button.click();
-            }
-        }
-    });
+
+    function displayAnnouncement(message) {
+        document.getElementById('announcement').innerText = message;
+    }
+
+    function displayMissedWords(words) {
+        document.getElementById('missed-words').innerText = `Missed words: ${words.join(', ')}`;
+    }
+
+    fetch('dictionary.txt')
+        .then(response => response.text())
+        .then(data => {
+            possibleWords = data.split('\n').map(word => word.trim().toLowerCase());
+        })
+        .catch(error => {
+            console.error('Error loading dictionary:', error);
+        });
 });
