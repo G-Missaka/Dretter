@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function playDateSeed() {
         resetGame();
-        alert('pikachu')
         const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
         randomLetters = generateRandomLetters(dateSeed);
         prepareGroups();
@@ -118,6 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     function selectLetter(letter, button) {
+        displaySelectedLetters();
         selectedLetters.push(letter);
         button.disabled = true;
         displaySelectedLetters();
