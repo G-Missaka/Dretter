@@ -257,10 +257,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedSet = new Set(letters.map(letter => letter.toLowerCase()));
         return possibleWords.filter(word => {
             if (word.length < 5) {
-                return false;
+                return false; // Exclude words shorter than 5 letters
             }
-            const wordLetters = word.split('');
-            return wordLetters.every(letter => selectedSet.has(letter.toLowerCase()));
+            const wordLetters = new Set(word.split(''));
+            return [...wordLetters].every(letter => selectedSet.has(letter.toLowerCase()));
         });
     }
 
