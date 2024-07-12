@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('finish-button').addEventListener('click', finishGame);
 
     function playRandomSeed() {
-        console.log('Playing random seed.');
         resetGame();
         randomLetters = generateRandomLetters();
         prepareGroups();
@@ -32,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function playDateSeed() {
-        console.log('Playing date seed.');
         resetGame();
         const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
         randomLetters = generateRandomLetters(dateSeed);
@@ -41,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setSeed() {
-        console.log('Setting seed.');
         resetGame();
         const seedValue = document.getElementById('seed-input').value;
         if (isNaN(seedValue) || seedValue === '') {
@@ -54,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function resetGame() {
-        console.log('Resetting game.');
         selectedLetters = [];
         possibleWords = [];
         enteredWords = [];
@@ -66,11 +62,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('draft-letters').innerHTML = '';
         document.getElementById('guess-letters').innerHTML = '';
         document.getElementById('guess-input').value = '';
-        document.getElementById('random-letters').innerText = ''; // Clear random letters display
     }
 
     function generateRandomLetters(seed = null) {
-        console.log('Generating random letters with seed:', seed);
         const letters = [...alphabet];
         if (seed) {
             Math.seedrandom(seed);
@@ -87,7 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function prepareGroups() {
-        console.log('Preparing groups.');
         const remainingLetters = alphabet.filter(letter => !randomLetters.includes(letter));
         remainingLetters.sort(() => Math.random() - 0.5);
         for (let i = 0; i < 4; i++) {
@@ -97,13 +90,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showNextGroup() {
-        console.log('Showing next group.');
         if (currentGroupIndex < groups.length) {
             const group = groups[currentGroupIndex];
             currentGroupIndex++;
             const draftLettersDiv = document.getElementById('draft-letters');
             draftLettersDiv.innerHTML = ''; // Clear previous group
-
+    
             group.forEach(letter => {
                 const button = document.createElement('button');
                 button.classList.add('letter-button');
@@ -114,19 +106,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 button.addEventListener('click', () => selectLetter(letter, button));
                 draftLettersDiv.appendChild(button);
             });
-
+    
             document.getElementById('game-board').classList.remove('hidden');
         } else {
             finishLetterSelection();
         }
     }
 
+
     function selectLetter(letter, button) {
-        console.log('Selecting letter:', letter);
         selectedLetters.push(letter);
         button.disabled = true;
         displaySelectedLetters();
-
+    
         // Check if there are more groups to show
         if (currentGroupIndex < groups.length) {
             showNextGroup();
@@ -134,33 +126,29 @@ document.addEventListener('DOMContentLoaded', () => {
             finishLetterSelection();
         }
     }
-
+    
     function displaySelectedLetters() {
-        console.log('Displaying selected letters:', selectedLetters);
         const guessLettersDiv = document.getElementById('guess-letters');
-        guessLettersDiv.innerHTML = `Selected Letters: ${selectedLetters.join(', ')}`;
+        guessLettersDiv.innerHTML = Selected Letters: ${selectedLetters.join(', ')};
     }
-
     function finishLetterSelection() {
-        console.log('Finishing letter selection.');
         document.getElementById('draft-letters').innerHTML = '';
         possibleWords = checked(selectedLetters);
-        document.getElementById('result').innerText = `Number of possible words: ${possibleWords.length}`;
+        document.getElementById('result').innerText = Number of possible words: ${possibleWords.length};
     }
 
     function submitWord() {
-        console.log('Submitting word.');
         const word = document.getElementById('guess-input').value.trim().toUpperCase();
         if (word === '') return;
         document.getElementById('guess-input').value = '';
 
         if (enteredWords.includes(word)) {
-            document.getElementById('result').innerText = `'${word}' has already been entered.`;
+            document.getElementById('result').innerText = '${word}' has already been entered.;
             return;
         }
 
         if (!isValidWord(word)) {
-            document.getElementById('result').innerText = `'${word}' is not in the word list.`;
+            document.getElementById('result').innerText = '${word}' is not in the word list.;
             return;
         }
 
@@ -170,25 +158,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (usesAllDraftedLetters(word)) {
             totalPoints += 200;
-            document.getElementById('result').innerText = `'${word}' scores ${points} points and uses all letters. Bonus: +200 points. Total points: ${totalPoints}`;
+            document.getElementById('result').innerText = '${word}' scores ${points} points and uses all letters. Bonus: +200 points. Total points: ${totalPoints};
         } else {
-            document.getElementById('result').innerText = `'${word}' scores ${points} points. Total points: ${totalPoints}`;
+            document.getElementById('result').innerText = '${word}' scores ${points} points. Total points: ${totalPoints};
         }
 
         if (!allLettersUsedBonusAwarded && usesAllDraftedLetters(enteredWords.join(''))) {
             totalPoints += 100;
             allLettersUsedBonusAwarded = true;
-            document.getElementById('result').innerText = `Bonus: Used all letters at least once! Total points: ${totalPoints}`;
+            document.getElementById('result').innerText = Bonus: Used all letters at least once! Total points: ${totalPoints};
         }
     }
 
     function isValidWord(word) {
-        console.log('Checking if word is valid:', word);
         return possibleWords.includes(word.toLowerCase());
     }
 
     function calculatePoints(word) {
-        console.log('Calculating points for word:', word);
         let points = 0;
         word.split('').forEach(letter => {
             points += letterPoints[letter] || 0;
@@ -200,19 +186,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function usesAllDraftedLetters(word) {
-        console.log('Checking if word uses all drafted letters:', word);
         const wordLetters = word.split('');
         return randomLetters.every(letter => wordLetters.includes(letter));
     }
 
     function finishGame() {
-        console.log('Finishing game.');
         document.getElementById('game-board').classList.add('hidden');
-        document.getElementById('result').innerText = `Game finished. Total points: ${totalPoints}.`;
+        document.getElementById('result').innerText = Game finished. Total points: ${totalPoints}.;
     }
 
     function checked(letters) {
-        console.log('Checking words with letters:', letters);
         const validWords = ['example', 'words']; // Placeholder for word checking logic
         return validWords.filter(word => word.split('').every(letter => letters.includes(letter.toUpperCase())));
     }
