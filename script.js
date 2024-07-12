@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const vowels = 'AEIOU'.split('');
     let randomLetters = [];
     let selectedLetters = [];
-    let possibleWords = []; // Initialize as empty
+    let possibleWords = [];
     let enteredWords = [];
     let totalPoints = 0;
     let allLettersUsedBonusAwarded = false;
@@ -18,70 +18,51 @@ document.addEventListener('DOMContentLoaded', () => {
         'Y': 4, 'Z': 30
     };
 
-    // Event listeners for game controls
     document.getElementById('play-random-seed-button').addEventListener('click', playRandomSeed);
     document.getElementById('play-date-seed-button').addEventListener('click', playDateSeed);
     document.getElementById('set-seed-button').addEventListener('click', setSeed);
     document.getElementById('submit-word-button').addEventListener('click', submitWord);
     document.getElementById('finish-button').addEventListener('click', finishGame);
-    document.getElementById('finish-button').addEventListener('click', finishGame);
-    document.getElementById('show-leaderboard-button').addEventListener('click', showLeaderboard);
-
-    // Fetch dictionary data
-    fetchDictionary();
-
-    // Function to fetch dictionary data
-    function fetchDictionary() {
-        fetch('dictionary.txt')
-            .then(response => response.text())
-            .then(data => {
-                possibleWords = data.split('\n').map(word => word.trim().toLowerCase());
-                enableGameControls(); // Enable game controls once dictionary is loaded
-            })
-            .catch(error => {
-                console.error('Error loading dictionary:', error);
-                displayAnnouncement('Error loading dictionary. Please try again later.');
-            });
-    }
-
-    // Enable game controls once dictionary is loaded
-    function enableGameControls() {
-        // Enable game controls here
-        document.getElementById('play-random-seed-button').disabled = false;
-        document.getElementById('play-date-seed-button').disabled = false;
-        document.getElementById('set-seed-button').disabled = false;
-        document.getElementById('submit-word-button').disabled = false;
-        document.getElementById('finish-button').disabled = false;
-    }
-
-    // Other game functions continue here...
 
     function playRandomSeed() {
         resetGame();
-        randomLetters = generateRandomLetters();
-        prepareGroups();
-        showNextGroup();
+        if (possibleWords.length > 0) {
+            randomLetters = generateRandomLetters();
+            prepareGroups();
+            showNextGroup();
+        } else {
+            displayAnnouncement('Dictionary is still loading. Please try again shortly.');
+        }
     }
 
     function playDateSeed() {
         resetGame();
-        const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-        randomLetters = generateRandomLetters(dateSeed);
-        prepareGroups();
-        showNextGroup();
+        if (possibleWords.length > 0) {
+            const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            randomLetters = generateRandomLetters(dateSeed);
+            prepareGroups();
+            showNextGroup();
+        } else {
+            displayAnnouncement('Dictionary is still loading. Please try again shortly.');
+        }
     }
 
     function setSeed() {
         resetGame();
-        const seedValue = document.getElementById('seed-input').value;
-        if (isNaN(seedValue) || seedValue === '') {
-            displayAnnouncement('Please enter a valid integer for the seed.');
-            return;
+        if (possibleWords.length > 0) {
+            const seedValue = document.getElementById('seed-input').value;
+            if (isNaN(seedValue) || seedValue === '') {
+                displayAnnouncement('Please enter a valid integer for the seed.');
+                return;
+            }
+            randomLetters = generateRandomLetters(seedValue);
+            prepareGroups();
+            showNextGroup();
+        } else {
+            displayAnnouncement('Dictionary is still loading. Please try again shortly.');
         }
-        randomLetters = generateRandomLetters(seedValue);
-        prepareGroups();
-        showNextGroup();
     }
+
     function resetGame() {
         selectedLetters = [];
         enteredWords = [];
@@ -248,14 +229,19 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('submit-word-button').disabled = true;
         document.getElementById('game-board').classList.add('hidden');
         const missedWords = possibleWords.filter(word => !enteredWords.includes(word));
-        const missedPoints = calculateMissedPoints(missedWords);
-        document.getElementById('result').innerText = `Game finished. Total points: ${totalPoints}. Missed points if all words submitted: ${missedPoints}`;
+        document.getElementById('result').innerText = `Game finished. Total points: ${totalPoints}.`;
         displayMissedWords(missedWords);
     }
 
     function checked(letters) {
-        const validWords = ['example', 'words']; // Placeholder for word checking logic
-        return validWords.filter(word => word.split('').every(letter => letters.includes(letter.toUpperCase())));
+        const selectedSet = new Set(letters.map(letter => letter.toLowerCase()));
+        return possibleWords.filter(word => {
+            if (word.length < 5) {
+                return false;
+            }
+            const wordLetters = word.split('');
+            return wordLetters.every(letter => selectedSet.has(letter.toLowerCase()));
+        });
     }
 
     function displayAnnouncement(message) {
@@ -270,11 +256,8 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.text())
         .then(data => {
             possibleWords = data.split('\n').map(word => word.trim().toLowerCase());
-            // Start the game after loading the dictionary
-            playRandomSeed(); // or any other initialization function
         })
         .catch(error => {
             console.error('Error loading dictionary:', error);
-            displayAnnouncement('Error loading dictionary. Please try again later.');
         });
 });
