@@ -50,3 +50,7 @@
 #leaderboard-list li {
     margin-bottom: 5px;
 }
+
+.hidden {
+    display: none;
+}

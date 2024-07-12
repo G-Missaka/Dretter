@@ -18,60 +18,49 @@ document.addEventListener('DOMContentLoaded', () => {
         'Y': 4, 'Z': 30
     };
 
-    // Event listeners for game controls
     document.getElementById('play-random-seed-button').addEventListener('click', playRandomSeed);
     document.getElementById('play-date-seed-button').addEventListener('click', playDateSeed);
     document.getElementById('set-seed-button').addEventListener('click', setSeed);
+    document.getElementById('submit-word-button').addEventListener('click', submitWord);
     document.getElementById('finish-button').addEventListener('click', finishGame);
-
-    // Fetch dictionary data and start the game
-    fetch('dictionary.txt')
-        .then(response => response.text())
-        .then(data => {
-            possibleWords = data.split('\n').map(word => word.trim().toLowerCase());
-            // Enable game controls after loading dictionary
-            enableGameControls();
-        })
-        .catch(error => {
-            console.error('Error loading dictionary:', error);
-            displayAnnouncement('Error loading dictionary. Please try again later.');
-        });
-
-    // Enable game controls once dictionary is loaded
-    function enableGameControls() {
-        document.getElementById('play-random-seed-button').disabled = false;
-        document.getElementById('play-date-seed-button').disabled = false;
-        document.getElementById('set-seed-button').disabled = false;
-    }
 
     function playRandomSeed() {
         resetGame();
-        randomLetters = generateRandomLetters();
-        prepareGroups();
-        showNextGroup();
-        showGameButtons(); // Show submit and finish buttons after starting the game
+        if (possibleWords.length > 0) {
+            randomLetters = generateRandomLetters();
+            prepareGroups();
+            showNextGroup();
+        } else {
+            displayAnnouncement('Dictionary is still loading. Please try again shortly.');
+        }
     }
 
     function playDateSeed() {
         resetGame();
-        const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-        randomLetters = generateRandomLetters(dateSeed);
-        prepareGroups();
-        showNextGroup();
-        showGameButtons(); // Show submit and finish buttons after starting the game
+        if (possibleWords.length > 0) {
+            const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            randomLetters = generateRandomLetters(dateSeed);
+            prepareGroups();
+            showNextGroup();
+        } else {
+            displayAnnouncement('Dictionary is still loading. Please try again shortly.');
+        }
     }
 
     function setSeed() {
         resetGame();
-        const seedValue = document.getElementById('seed-input').value;
-        if (isNaN(seedValue) || seedValue === '') {
-            displayAnnouncement('Please enter a valid integer for the seed.');
-            return;
+        if (possibleWords.length > 0) {
+            const seedValue = document.getElementById('seed-input').value;
+            if (isNaN(seedValue) || seedValue === '') {
+                displayAnnouncement('Please enter a valid integer for the seed.');
+                return;
+            }
+            randomLetters = generateRandomLetters(seedValue);
+            prepareGroups();
+            showNextGroup();
+        } else {
+            displayAnnouncement('Dictionary is still loading. Please try again shortly.');
         }
-        randomLetters = generateRandomLetters(seedValue);
-        prepareGroups();
-        showNextGroup();
-        showGameButtons(); // Show submit and finish buttons after starting the game
     }
 
     function resetGame() {
@@ -90,7 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('guess-input').value = '';
         document.getElementById('guess-input').disabled = false;
         document.getElementById('submit-word-button').disabled = false;
-        hideGameButtons(); // Hide submit and finish buttons initially
     }
 
     function generateRandomLetters(seed = null) {
@@ -136,7 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     button.classList.add('vowel');
                 }
                 button.innerText = letter;
-                button.dataset.letter = letter; // Add dataset attribute for keyboard input
                 button.addEventListener('click', () => selectLetter(letter, button));
                 draftLettersDiv.appendChild(button);
             });
@@ -171,17 +158,102 @@ document.addEventListener('DOMContentLoaded', () => {
         displayAnnouncement('Only 5-letter (or more) words are allowed.');
     }
 
-    function finishGame() {
-        gameFinished = true;
-        document.getElementById('guess-input').disabled = true;
-        document.getElementById('submit-word-button').disabled = true;
-        document.getElementById('game-board').classList.add('hidden');
-        const missedWords = possibleWords.filter(word => !enteredWords.includes(word));
-        const missedPoints = calculateMissedPoints(missedWords);
-        document.getElementById('result').innerText = `Game finished. Total points: ${totalPoints}. Missed points if all words submitted: ${missedPoints}`;
-        displayMissedWords(missedWords);
+    function submitWord() {
+        if (gameFinished) return;
+
+        const word = document.getElementById('guess-input').value.trim().toLowerCase();
+
+        if (word === '') return;
+        document.getElementById('guess-input').value = '';
+
+        if (enteredWords.includes(word)) {
+            document.getElementById('result').innerText = `'${word}' has already been entered.`;
+            return;
+        }
+
+        if (!isValidWord(word)) {
+            document.getElementById('result').innerText = `'${word}' is not in the word list or does not use the selected letters.`;
+            return;
+        }
+
+        const points = calculatePoints(word);
+        totalPoints += points;
+        enteredWords.push(word);
+
+        if (usesAllDraftedLetters(word)) {
+            totalPoints += 200;
+            document.getElementById('result').innerText = `'${word}' scores ${points} points and uses all letters. Bonus: +200 points. Total points: ${totalPoints}`;
+        } else {
+            document.getElementById('result').innerText = `'${word}' scores ${points} points. Total points: ${totalPoints}`;
+        }
+
+        if (!allLettersUsedBonusAwarded && checkAllLettersUsed()) {
+            totalPoints += 100;
+            allLettersUsedBonusAwarded = true;
+            document.getElementById('result').innerText = `Bonus: Used all letters at least once! Total points: ${totalPoints}`;
+        }
     }
 
+    function isValidWord(word) {
+        const selectedSet = new Set(selectedLetters.map(letter => letter.toLowerCase()));
+        return possibleWords.includes(word) && word.split('').every(letter => selectedSet.has(letter));
+    }
+
+    function calculatePoints(word) {
+        let points = 0;
+        word.split('').forEach(letter => {
+            points += letterPoints[letter.toUpperCase()] || 0;
+        });
+        if (word.endsWith('s') && possibleWords.includes(word.slice(0, -1))) {
+            points = Math.floor(points / 3);
+        }
+        return points;
+    }
+
+    function usesAllDraftedLetters(word) {
+        const wordLetters = new Set(word.split(''));
+        return selectedLetters.every(letter => wordLetters.has(letter.toLowerCase()));
+    }
+
+    function checkAllLettersUsed() {
+        const allUsedLetters = new Set();
+        enteredWords.forEach(word => {
+            word.split('').forEach(letter => allUsedLetters.add(letter.toLowerCase()));
+        });
+        return selectedLetters.every(letter => allUsedLetters.has(letter.toLowerCase()));
+    }
+
+function finishGame() {
+    gameFinished = true;
+    document.getElementById('guess-input').disabled = true;
+    document.getElementById('submit-word-button').disabled = true;
+    document.getElementById('game-board').classList.add('hidden');
+    const missedWords = possibleWords.filter(word => !enteredWords.includes(word));
+    const missedPoints = calculateMissedPoints(missedWords);
+    document.getElementById('result').innerText = `Game finished. Total points: ${totalPoints}. Missed points if all words submitted: ${missedPoints}`;
+    displayMissedWords(missedWords);
+}
+
+function calculateMissedPoints(missedWords) {
+    let missedPoints = 0;
+
+    // Calculate points for each missed word
+    missedWords.forEach(word => {
+        missedPoints += calculatePoints(word);
+
+        // Check if missed word would complete using all letters
+        if (usesAllDraftedLetters(word)) {
+            missedPoints += 200;
+        }
+    });
+
+    // Check if bonus for using all letters at least once was missed
+    if (!allLettersUsedBonusAwarded && checkAllLettersUsed()) {
+        missedPoints += 100;
+    }
+
+    return missedPoints;
+}
     function checked(letters) {
         const selectedSet = new Set(letters.map(letter => letter.toLowerCase()));
         return possibleWords.filter(word => {
@@ -192,26 +264,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return wordLetters.every(letter => selectedSet.has(letter.toLowerCase()));
         });
     }
-
-    function displayAnnouncement(message) {
-        document.getElementById('announcement').innerText = message;
-    }
-
-    function displayMissedWords(words) {
-        document.getElementById('missed-words').innerText = `Missed words: ${words.join(', ')}`;
-    }
-
-    function hideGameButtons() {
-        document.getElementById('submit-word-button').style.display = 'none';
-        document.getElementById('finish-button').style.display = 'none';
-    }
-
-    function showGameButtons() {
-        document.getElementById('submit-word-button').style.display = 'inline-block';
-        document.getElementById('finish-button').style.display = 'inline-block';
-    }
-
-
 
     function displayAnnouncement(message) {
         document.getElementById('announcement').innerText = message;
