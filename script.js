@@ -272,6 +272,17 @@ document.addEventListener('DOMContentLoaded', () => {
         return selectedLetters.every(letter => allUsedLetters.has(letter.toLowerCase()));
     }
 
+    function finishGame() {
+        gameFinished = true;
+        document.getElementById('guess-input').disabled = true;
+        document.getElementById('submit-word-button').disabled = true;
+        document.getElementById('game-board').classList.add('hidden');
+        const missedWords = possibleWords.filter(word => !enteredWords.includes(word));
+        const missedPoints = calculateMissedPoints(missedWords);
+        document.getElementById('result').innerText = `Game finished. Total points: ${totalPoints}. Missed points if all words submitted: ${missedPoints}`;
+        displayMissedWords(missedWords);
+    }
+
     function checked(letters) {
         const selectedSet = new Set(letters.map(letter => letter.toLowerCase()));
         return possibleWords.filter(word => {
@@ -295,8 +306,11 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.text())
         .then(data => {
             possibleWords = data.split('\n').map(word => word.trim().toLowerCase());
+            // Start the game after loading the dictionary
+            playRandomSeed(); // or any other initialization function
         })
         .catch(error => {
             console.error('Error loading dictionary:', error);
+            displayAnnouncement('Error loading dictionary. Please try again later.');
         });
 });
