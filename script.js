@@ -201,8 +201,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function checked(letters) {
+        alert('here')
         return possibleWords.filter(word => {
             const wordLetters = word.split('');
+            alert(wordLetters)
             const selectedSet = new Set(letters.map(letter => letter.toLowerCase()));
             alert(wordLetters)
             return wordLetters.every(letter => selectedSet.has(letter.toLowerCase()));
