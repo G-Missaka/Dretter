@@ -205,13 +205,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('result').innerText = `Game finished. Total points: ${totalPoints}.`;
     }
 
+
     function checked(letters) {
         return possibleWords.filter(word => {
             const wordLetters = word.split('');
-            return wordLetters.every(letter => letters.includes(letter.toUpperCase()));
+            const selectedSet = new Set(letters.map(letter => letter.toLowerCase()));
+            return wordLetters.every(letter => selectedSet.has(letter.toLowerCase()));
         });
     }
-    
 
     fetch('dictionary.txt')
         .then(response => response.text())
