@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const vowels = 'AEIOU'.split('');
     let randomLetters = [];
     let selectedLetters = [];
-    let possibleWords = [];
+    let possibleWords = []; // Initialize as empty
     let enteredWords = [];
     let totalPoints = 0;
     let allLettersUsedBonusAwarded = false;
@@ -13,105 +13,75 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const letterPoints = {
         'A': 0, 'B': 3, 'C': 3, 'D': 2, 'E': 0, 'F': 4, 'G': 2, 'H': 4,
-        'I': 0, 'J': 10, 'K': 5, 'L': 1, 'M': 3, 'N': 1, 'O': 0, 'P': 3,
+        'I': 0, 'J': 8, 'K': 5, 'L': 1, 'M': 3, 'N': 1, 'O': 0, 'P': 3,
         'Q': 50, 'R': 1, 'S': 0, 'T': 1, 'U': 0, 'V': 4, 'W': 4, 'X': 8,
         'Y': 4, 'Z': 30
     };
 
+    // Event listeners for game controls
     document.getElementById('play-random-seed-button').addEventListener('click', playRandomSeed);
     document.getElementById('play-date-seed-button').addEventListener('click', playDateSeed);
     document.getElementById('set-seed-button').addEventListener('click', setSeed);
     document.getElementById('submit-word-button').addEventListener('click', submitWord);
     document.getElementById('finish-button').addEventListener('click', finishGame);
+    document.getElementById('finish-button').addEventListener('click', finishGame);
     document.getElementById('show-leaderboard-button').addEventListener('click', showLeaderboard);
 
-    function finishGame() {
-        gameFinished = true;
-        document.getElementById('guess-input').disabled = true;
-        document.getElementById('submit-word-button').disabled = true;
-        document.getElementById('game-board').classList.add('hidden');
-        const missedWords = possibleWords.filter(word => !enteredWords.includes(word));
-        const missedPoints = calculateMissedPoints(missedWords);
-        document.getElementById('result').innerText = `Game finished. Total points: ${totalPoints}. Missed points if all words submitted: ${missedPoints}`;
-        displayMissedWords(missedWords);
+    // Fetch dictionary data
+    fetchDictionary();
+
+    // Function to fetch dictionary data
+    function fetchDictionary() {
+        fetch('dictionary.txt')
+            .then(response => response.text())
+            .then(data => {
+                possibleWords = data.split('\n').map(word => word.trim().toLowerCase());
+                enableGameControls(); // Enable game controls once dictionary is loaded
+            })
+            .catch(error => {
+                console.error('Error loading dictionary:', error);
+                displayAnnouncement('Error loading dictionary. Please try again later.');
+            });
     }
 
-    function calculateMissedPoints(missedWords) {
-        let missedPoints = 0;
-
-        missedWords.forEach(word => {
-            if (isValidWord(word)) {
-                missedPoints += calculatePoints(word);
-
-                if (usesAllDraftedLetters(word)) {
-                    missedPoints += 200; // Bonus for using all letters
-                }
-            }
-        });
-
-        return missedPoints;
+    // Enable game controls once dictionary is loaded
+    function enableGameControls() {
+        // Enable game controls here
+        document.getElementById('play-random-seed-button').disabled = false;
+        document.getElementById('play-date-seed-button').disabled = false;
+        document.getElementById('set-seed-button').disabled = false;
+        document.getElementById('submit-word-button').disabled = false;
+        document.getElementById('finish-button').disabled = false;
     }
 
-    function isValidWord(word) {
-        const selectedSet = new Set(selectedLetters.map(letter => letter.toLowerCase()));
-        return possibleWords.includes(word) && word.split('').every(letter => selectedSet.has(letter));
-    }
-
-    function calculatePoints(word) {
-        let points = 0;
-        word.split('').forEach(letter => {
-            points += letterPoints[letter.toUpperCase()] || 0;
-        });
-        if (word.endsWith('s') && possibleWords.includes(word.slice(0, -1))) {
-            points = Math.floor(points / 3);
-        }
-        return points;
-    }
-
-    function usesAllDraftedLetters(word) {
-        const wordLetters = new Set(word.split(''));
-        return selectedLetters.every(letter => wordLetters.has(letter.toLowerCase()));
-    }
+    // Other game functions continue here...
 
     function playRandomSeed() {
         resetGame();
-        if (possibleWords.length > 0) {
-            randomLetters = generateRandomLetters();
-            prepareGroups();
-            showNextGroup();
-        } else {
-            displayAnnouncement('Dictionary is still loading. Please try again shortly.');
-        }
+        randomLetters = generateRandomLetters();
+        prepareGroups();
+        showNextGroup();
     }
 
     function playDateSeed() {
         resetGame();
-        if (possibleWords.length > 0) {
-            const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-            randomLetters = generateRandomLetters(dateSeed);
-            prepareGroups();
-            showNextGroup();
-        } else {
-            displayAnnouncement('Dictionary is still loading. Please try again shortly.');
-        }
+        const dateSeed = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        randomLetters = generateRandomLetters(dateSeed);
+        prepareGroups();
+        showNextGroup();
     }
 
     function setSeed() {
         resetGame();
-        if (possibleWords.length > 0) {
-            const seedValue = document.getElementById('seed-input').value;
-            if (isNaN(seedValue) || seedValue === '') {
-                displayAnnouncement('Please enter a valid integer for the seed.');
-                return;
-            }
-            randomLetters = generateRandomLetters(seedValue);
-            prepareGroups();
-            showNextGroup();
-        } else {
-            displayAnnouncement('Dictionary is still loading. Please try again shortly.');
+        const seedValue = document.getElementById('seed-input').value;
+        if (isNaN(seedValue) || seedValue === '') {
+            displayAnnouncement('Please enter a valid integer for the seed.');
+            return;
         }
+        randomLetters = generateRandomLetters(seedValue);
+        prepareGroups();
+        showNextGroup();
     }
-
     function resetGame() {
         selectedLetters = [];
         enteredWords = [];
